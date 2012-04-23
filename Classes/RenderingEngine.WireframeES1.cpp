@@ -17,6 +17,7 @@ public:
     void Initialize(const vector<ISurface*>& surfaces);
     void Render(const vector<Visual>& visuals) const;
 private:
+    GLuint m_depthRenderbuffer;
     vector<Drawable> m_drawables;
     GLuint m_colorRenderbuffer;
     mat4 m_translation;
@@ -70,12 +71,37 @@ void RenderingEngine::Initialize(const vector<ISurface*>& surfaces)
     }
     
     // Create the framebuffer object.
+//    GLuint framebuffer;
+//    glGenFramebuffersOES(1, &framebuffer);
+//    glBindFramebufferOES(GL_FRAMEBUFFER_OES, framebuffer);
+//    glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES,
+//                                 GL_RENDERBUFFER_OES, m_colorRenderbuffer);
+//    glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
+    // Extract width and height from the color buffer.
+    int width, height;
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES,
+                                    GL_RENDERBUFFER_WIDTH_OES, &width);
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES,
+                                    GL_RENDERBUFFER_HEIGHT_OES, &height);
+    
+    // Create a depth buffer that has the same size as the color buffer.
+    glGenRenderbuffersOES(1, &m_depthRenderbuffer);
+    glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_depthRenderbuffer);
+    glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES,
+                             width, height);
+    
+    // Create the framebuffer object.
     GLuint framebuffer;
     glGenFramebuffersOES(1, &framebuffer);
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, framebuffer);
     glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES,
                                  GL_RENDERBUFFER_OES, m_colorRenderbuffer);
+    glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES,
+                                 GL_RENDERBUFFER_OES, m_depthRenderbuffer);
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, m_colorRenderbuffer);
+    
+    // Enable depth testing.
+    glEnable(GL_DEPTH_TEST);
 
     glEnableClientState(GL_VERTEX_ARRAY);
     m_translation = mat4::Translate(0, 0, -7);
@@ -84,7 +110,7 @@ void RenderingEngine::Initialize(const vector<ISurface*>& surfaces)
 void RenderingEngine::Render(const vector<Visual>& visuals) const
 {
     glClearColor(0.5f, 0.5f, 0.5f, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     vector<Visual>::const_iterator visual = visuals.begin();
     for (int visualIndex = 0; visual != visuals.end(); ++visual, ++visualIndex) {
