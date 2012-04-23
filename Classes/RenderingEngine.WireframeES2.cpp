@@ -22,6 +22,7 @@ public:
     void Initialize(const vector<ISurface*>& surfaces);
     void Render(const vector<Visual>& visuals) const;
 private:
+    GLuint m_depthRenderbuffer;
     GLuint BuildShader(const char* source, GLenum shaderType) const;
     GLuint BuildProgram(const char* vShader, const char* fShader) const;
     vector<Drawable> m_drawables;
@@ -81,12 +82,37 @@ void RenderingEngine::Initialize(const vector<ISurface*>& surfaces)
     }
     
     // Create the framebuffer object.
+//    GLuint framebuffer;
+//    glGenFramebuffers(1, &framebuffer);
+//    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+//    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+//                              GL_RENDERBUFFER, m_colorRenderbuffer);
+//    glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderbuffer);
+    // Extract width and height from the color buffer.
+    int width, height;
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER,
+                                    GL_RENDERBUFFER_WIDTH, &width);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER,
+                                    GL_RENDERBUFFER_HEIGHT, &height);
+    
+    // Create a depth buffer that has the same size as the color buffer.
+    glGenRenderbuffers(1, &m_depthRenderbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16,
+                             width, height);
+    
+    // Create the framebuffer object.
     GLuint framebuffer;
     glGenFramebuffers(1, &framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                              GL_RENDERBUFFER, m_colorRenderbuffer);
+                                 GL_RENDERBUFFER, m_colorRenderbuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                 GL_RENDERBUFFER, m_depthRenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderbuffer);
+    
+    // Enable depth testing.
+    glEnable(GL_DEPTH_TEST);
     
     // Create the GLSL program.
     GLuint simpleProgram = BuildProgram(SimpleVertexShader, SimpleFragmentShader);
@@ -104,7 +130,7 @@ void RenderingEngine::Initialize(const vector<ISurface*>& surfaces)
 void RenderingEngine::Render(const vector<Visual>& visuals) const
 {
     glClearColor(0.5f, 0.5f, 0.5f, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
     vector<Visual>::const_iterator visual = visuals.begin();
     for (int visualIndex = 0; visual != visuals.end(); ++visual, ++visualIndex) {
