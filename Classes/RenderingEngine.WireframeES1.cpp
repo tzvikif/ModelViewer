@@ -41,7 +41,7 @@ void RenderingEngine::Initialize(const vector<ISurface*>& surfaces)
         
         // Create the VBO for the vertices.
         vector<float> vertices;
-        (*surface)->GenerateVertices(vertices);
+        (*surface)->GenerateVertices(vertices,VertexFlagsNormals);
         GLuint vertexBuffer;
         glGenBuffers(1, &vertexBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -51,13 +51,13 @@ void RenderingEngine::Initialize(const vector<ISurface*>& surfaces)
                      GL_STATIC_DRAW);
         
         // Create a new VBO for the indices if needed.
-        int indexCount = (*surface)->GetLineIndexCount();
+        int indexCount = (*surface)->GetTriangleIndexCount();
         GLuint indexBuffer;
         if (!m_drawables.empty() && indexCount == m_drawables[0].IndexCount) {
             indexBuffer = m_drawables[0].IndexBuffer;
         } else {
             vector<GLushort> indices(indexCount);
-            (*surface)->GenerateLineIndices(indices);
+            (*surface)->GenerateTriangleIndices(indices);
             glGenBuffers(1, &indexBuffer);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER,
@@ -69,7 +69,10 @@ void RenderingEngine::Initialize(const vector<ISurface*>& surfaces)
         Drawable drawable = { vertexBuffer, indexBuffer, indexCount};
         m_drawables.push_back(drawable);
     }
-    
+    // Set up various GL state. 
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
     // Create the framebuffer object.
 //    GLuint framebuffer;
 //    glGenFramebuffersOES(1, &framebuffer);
@@ -102,8 +105,14 @@ void RenderingEngine::Initialize(const vector<ISurface*>& surfaces)
     
     // Enable depth testing.
     glEnable(GL_DEPTH_TEST);
-
     glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    // Set up the material properties.
+    vec4 specular(0.5f, 0.5f, 0.5f, 1);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular.Pointer());
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0f);
     m_translation = mat4::Translate(0, 0, -7);
 }
 
@@ -123,7 +132,11 @@ void RenderingEngine::Render(const vector<Visual>& visuals) const
         // Set the model-view transform.
         mat4 rotation = visual->Orientation.ToMatrix();
         mat4 modelview = rotation * m_translation;
+        // Set the light position.
         glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        vec4 lightPosition(0.25, 0.25, 1, 0);
+        glLightfv(GL_LIGHT0, GL_POSITION, lightPosition.Pointer());
         glLoadMatrixf(modelview.Pointer());
         
         // Set the projection transform.
@@ -132,17 +145,19 @@ void RenderingEngine::Render(const vector<Visual>& visuals) const
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(projection.Pointer());
         
-        // Set the color.
-        vec3 color = visual->Color;
-        glColor4f(color.x, color.y, color.z, 1);
-        
-        // Draw the wireframe.
-        int stride = sizeof(vec3);
+        // Set the diffuse color.
+        vec3 color = visual->Color * 0.75f;
+        vec4 diffuse(color.x, color.y, color.z, 1); 
+        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse.Pointer());
+        // Draw the surface.
+        int stride = 2 * sizeof(vec3);
         const Drawable& drawable = m_drawables[visualIndex];
         glBindBuffer(GL_ARRAY_BUFFER, drawable.VertexBuffer);
         glVertexPointer(3, GL_FLOAT, stride, 0);
+        const GLvoid* normalOffset = (const GLvoid*) sizeof(vec3);
+        glNormalPointer(GL_FLOAT, stride, normalOffset);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable.IndexBuffer);
-        glDrawElements(GL_LINES, drawable.IndexCount, GL_UNSIGNED_SHORT, 0);
+        glDrawElements(GL_TRIANGLES, drawable.IndexCount, GL_UNSIGNED_SHORT, 0);
     }
 }
     
