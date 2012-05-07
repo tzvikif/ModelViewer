@@ -10,6 +10,7 @@
 		1D3623260D0F684500981E51 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AppDelegate.mm */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		20D3CFEA1557E55700049EC3 /* SimpleLighting.vert in Sources */ = {isa = PBXBuildFile; fileRef = 20D3CFE91557E55700049EC3 /* SimpleLighting.vert */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		4A4C34E41038C28B002B58DB /* ApplicationEngine.ParametricViewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A4C34DD1038C28B002B58DB /* ApplicationEngine.ParametricViewer.cpp */; };
 		4A4C34E91038C28B002B58DB /* RenderingEngine.WireframeES1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A4C34E21038C28B002B58DB /* RenderingEngine.WireframeES1.cpp */; };
@@ -29,10 +30,11 @@
 		1D3623250D0F684500981E51 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* ModelViewer..app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ModelViewer..app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		20D3CFE91557E55700049EC3 /* SimpleLighting.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SimpleLighting.vert; path = Shaders/SimpleLighting.vert; sourceTree = "<group>"; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		4A4C34DD1038C28B002B58DB /* ApplicationEngine.ParametricViewer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ApplicationEngine.ParametricViewer.cpp; sourceTree = "<group>"; };
-		4A4C34E21038C28B002B58DB /* RenderingEngine.WireframeES1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderingEngine.WireframeES1.cpp; sourceTree = "<group>"; };
-		4A4C34E31038C28B002B58DB /* RenderingEngine.WireframeES2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderingEngine.WireframeES2.cpp; sourceTree = "<group>"; };
+		4A4C34E21038C28B002B58DB /* RenderingEngine.WireframeES1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = RenderingEngine.WireframeES1.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		4A4C34E31038C28B002B58DB /* RenderingEngine.WireframeES2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = RenderingEngine.WireframeES2.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		4A75BB7510063249001B5F63 /* ParametricSurface.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ParametricSurface.hpp; sourceTree = "<group>"; };
 		4A75BB7610063249001B5F63 /* ParametricSurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParametricSurface.cpp; sourceTree = "<group>"; };
 		4A8CFAFD1005657D00874D11 /* ParametricEquations.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ParametricEquations.hpp; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 		4A3205CA1002E63100DC8880 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				20D3CFE91557E55700049EC3 /* SimpleLighting.vert */,
 				4D508D6A102601AA0065571B /* Simple.es2.frag */,
 				4D508D6B102601AA0065571B /* Simple.es2.vert */,
 			);
@@ -214,6 +217,7 @@
 				4A4C34E41038C28B002B58DB /* ApplicationEngine.ParametricViewer.cpp in Sources */,
 				4A4C34E91038C28B002B58DB /* RenderingEngine.WireframeES1.cpp in Sources */,
 				4A4C34EA1038C28B002B58DB /* RenderingEngine.WireframeES2.cpp in Sources */,
+				20D3CFEA1557E55700049EC3 /* SimpleLighting.vert in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
