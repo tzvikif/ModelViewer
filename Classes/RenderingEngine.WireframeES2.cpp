@@ -18,6 +18,7 @@ namespace WireframeES2 {
         GLint AmbientMaterial;
         GLint SpecularMaterial;
         GLint Shininess;
+        GLuint LineMode;
     };
     
     struct AttributeHandles {
@@ -29,7 +30,9 @@ namespace WireframeES2 {
     struct Drawable {
         GLuint VertexBuffer;
         GLuint IndexBuffer;
+        GLuint lineIndexBuffer;
         int IndexCount;
+        int lineIndexCount;
     };
     
     class RenderingEngine : public IRenderingEngine {
@@ -90,8 +93,19 @@ namespace WireframeES2 {
                              &indices[0],
                              GL_STATIC_DRAW);
             }
+            int lineIndexCount = (*surface)->GetLineIndexCount();
+            GLuint lineIndexBuffer;
+            vector<GLushort> lineIndices(lineIndexCount);
+            (*surface)->GenerateLineIndices(lineIndices);
+            glGenBuffers(1, &lineIndexBuffer);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, lineIndexBuffer);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                         lineIndexCount * sizeof(GLushort),
+                         &lineIndices[0],
+                         GL_STATIC_DRAW);
             
-            Drawable drawable = { vertexBuffer, indexBuffer, indexCount};
+            
+            Drawable drawable = { vertexBuffer, indexBuffer,lineIndexBuffer , indexCount, lineIndexCount};
             m_drawables.push_back(drawable);
         }
         
@@ -132,12 +146,14 @@ namespace WireframeES2 {
         m_uniforms.AmbientMaterial = glGetUniformLocation(program, "AmbientMaterial");
         m_uniforms.SpecularMaterial = glGetUniformLocation(program, "SpecularMaterial");
         m_uniforms.Shininess = glGetUniformLocation(program, "Shininess"); 
+        m_uniforms.LineMode = glGetUniformLocation(program, "lineMode");
         
         // Set up some default material parameters.
         glUniform3f(m_uniforms.AmbientMaterial, 0.04f, 0.04f, 0.04f);
         glUniform3f(m_uniforms.SpecularMaterial, 0.5, 0.5, 0.5);
         glUniform1f(m_uniforms.Shininess, 50);
-        
+      
+
         // Initialize various state.
         glEnableVertexAttribArray(m_attributes.Position);
         glEnableVertexAttribArray(m_attributes.Normal);
@@ -189,11 +205,18 @@ namespace WireframeES2 {
             GLint position = m_attributes.Position;
             GLint normal = m_attributes.Normal;
             const Drawable& drawable = m_drawables[visualIndex];
+            glUniform1f(m_uniforms.LineMode, 0);
             glBindBuffer(GL_ARRAY_BUFFER, drawable.VertexBuffer);
+            glPolygonOffset(1, 0);
+            glEnable(GL_POLYGON_OFFSET_FILL);
             glVertexAttribPointer(position, 3, GL_FLOAT, GL_FALSE, stride, 0);
             glVertexAttribPointer(normal, 3, GL_FLOAT, GL_FALSE, stride, offset);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable.IndexBuffer);
             glDrawElements(GL_TRIANGLES, drawable.IndexCount, GL_UNSIGNED_SHORT, 0);
+            glDisable(GL_POLYGON_OFFSET_FILL);
+            glUniform1f(m_uniforms.LineMode, 1);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable.lineIndexBuffer);
+            glDrawElements(GL_LINES, drawable.lineIndexCount, GL_UNSIGNED_SHORT, 0);
         }
     }
     
