@@ -29,7 +29,7 @@
             return nil;
         }
         
-
+        m_resourceManager = ObjViewer::CreateResourceManager();
         if (api == kEAGLRenderingAPIOpenGLES1) {
             NSLog(@"Using OpenGL ES 1.1");
             m_renderingEngine = WireframeES1::CreateRenderingEngine();
@@ -38,7 +38,7 @@
             m_renderingEngine = WireframeES2::CreateRenderingEngine();
         }
 
-       m_applicationEngine = ParametricViewer::CreateApplicationEngine(m_renderingEngine);
+       m_applicationEngine = ObjViewer::CreateApplicationEngine(m_renderingEngine,m_resourceManager);
 
         [m_context
             renderbufferStorage:GL_RENDERBUFFER
