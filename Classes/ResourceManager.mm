@@ -1,9 +1,21 @@
-//
-//  ResourceManager.mm
-//  ModelViewer.
-//
-//  Created by Tzviki Fisher on 5/9/12.
-//  Copyright (c) 2012 Leumi. All rights reserved.
-//
+#import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
+#import <string>
+#import <iostream>
+#import "Interfaces.hpp"
 
-#include <iostream>
+using namespace std;
+
+class ResourceManager : public IResourceManager {
+public:
+    string GetResourcePath() const
+    {
+        NSString* bundlePath = [[NSBundle mainBundle] resourcePath];
+        return [bundlePath UTF8String];
+    }
+};
+
+IResourceManager* CreateResourceManager()
+{
+    return new ResourceManager();
+}
