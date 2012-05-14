@@ -48,25 +48,31 @@ struct IRenderingEngine {
 
 struct IResourceManager {
     virtual string GetResourcePath() const = 0;
-//    virtual void LoadPngImage(const string& filename) = 0;
-//    virtual void* GetImageData() = 0;
-//    virtual ivec2 GetImageSize() = 0;
-//    virtual void UnloadImage() = 0;
+    virtual void LoadPngImage(const string& filename) = 0;
+    virtual void* GetImageData() = 0;
+    virtual ivec2 GetImageSize() = 0;
+    virtual void UnloadImage() = 0;
     virtual ~IResourceManager() {}
 };
 
-namespace ParametricViewer { IApplicationEngine* CreateApplicationEngine(IRenderingEngine*); }
-namespace ObjViewer    { IApplicationEngine* CreateApplicationEngine(IRenderingEngine*, IResourceManager*);IResourceManager* CreateResourceManager();}
-namespace Darwin       { IResourceManager* CreateResourceManager(); }
-namespace WireframeES1 { IRenderingEngine* CreateRenderingEngine(); }
-namespace WireframeES2 { IRenderingEngine* CreateRenderingEngine(); }
-namespace SolidES1     { IRenderingEngine* CreateRenderingEngine(); }
-namespace SolidES2     { IRenderingEngine* CreateRenderingEngine(); }
-namespace SolidGL2     { IRenderingEngine* CreateRenderingEngine(); }
-namespace FacetedES1   { IRenderingEngine* CreateRenderingEngine(); }
-namespace FacetedES2   { IRenderingEngine* CreateRenderingEngine(); }
-namespace DepthViewer  { IRenderingEngine* CreateRenderingEngine(); }
-namespace TexturedES1  { IRenderingEngine* CreateRenderingEngine(IResourceManager*); }
-namespace TexturedES2  { IRenderingEngine* CreateRenderingEngine(IResourceManager*); }
-namespace TexturedGL2  { IRenderingEngine* CreateRenderingEngine(IResourceManager*); }
+//namespace ParametricViewer { IApplicationEngine* CreateApplicationEngine(IRenderingEngine*); }
+//namespace ObjViewer    { IApplicationEngine* CreateApplicationEngine(IRenderingEngine*, IResourceManager*);
+//                            IResourceManager* CreateResourceManager();
+//}
+//namespace Darwin       { IResourceManager* CreateResourceManager(); }
+//namespace WireframeES1 { IRenderingEngine* CreateRenderingEngine(); }
+//namespace WireframeES2 { IRenderingEngine* CreateRenderingEngine(); }
+//namespace SolidES1     { IRenderingEngine* CreateRenderingEngine(); }
+//namespace SolidES2     { IRenderingEngine* CreateRenderingEngine(); }
+//namespace SolidGL2     { IRenderingEngine* CreateRenderingEngine(); }
+//namespace FacetedES1   { IRenderingEngine* CreateRenderingEngine(); }
+//namespace FacetedES2   { IRenderingEngine* CreateRenderingEngine(); }
+//namespace DepthViewer  { IRenderingEngine* CreateRenderingEngine(); }
+//namespace TexturedES1  { IRenderingEngine* CreateRenderingEngine(IResourceManager*); }
+//namespace TexturedES2  { IRenderingEngine* CreateRenderingEngine(IResourceManager*); }
+//namespace TexturedGL2  { IRenderingEngine* CreateRenderingEngine(IResourceManager*); }
+namespace ES1 {IRenderingEngine* CreateRenderingEngine(IResourceManager* resourceManager); }
+namespace ES2 {IRenderingEngine* CreateRenderingEngine(IResourceManager* resourceManager); }
+IResourceManager* CreateResourceManager();
+IApplicationEngine* CreateApplicationEngine(IRenderingEngine*, IResourceManager*);
 

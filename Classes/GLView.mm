@@ -16,7 +16,7 @@
         CAEAGLLayer* eaglLayer = (CAEAGLLayer*) self.layer;
         eaglLayer.opaque = YES;
 
-        EAGLRenderingAPI api = kEAGLRenderingAPIOpenGLES2;
+        EAGLRenderingAPI api = kEAGLRenderingAPIOpenGLES1;
         m_context = [[EAGLContext alloc] initWithAPI:api];
         
         if (!m_context) {
@@ -29,16 +29,16 @@
             return nil;
         }
         
-        m_resourceManager = ObjViewer::CreateResourceManager();
+        m_resourceManager = CreateResourceManager();
         if (api == kEAGLRenderingAPIOpenGLES1) {
             NSLog(@"Using OpenGL ES 1.1");
-            m_renderingEngine = WireframeES1::CreateRenderingEngine();
+            m_renderingEngine = ES1::CreateRenderingEngine(m_resourceManager);
         } else {
             NSLog(@"Using OpenGL ES 2.0");
-            m_renderingEngine = WireframeES2::CreateRenderingEngine();
+            m_renderingEngine = ES2::CreateRenderingEngine(m_resourceManager);
         }
 
-       m_applicationEngine = ObjViewer::CreateApplicationEngine(m_renderingEngine,m_resourceManager);
+        m_applicationEngine = CreateApplicationEngine(m_renderingEngine,m_resourceManager);
 
         [m_context
             renderbufferStorage:GL_RENDERBUFFER

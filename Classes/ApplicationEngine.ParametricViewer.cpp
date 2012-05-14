@@ -1,10 +1,9 @@
 #include "Interfaces.hpp"
 #include "ParametricEquations.hpp"
-#include "ObjSurface.hpp"
+//#include "ObjSurface.hpp"
 
 using namespace std;
 
-namespace ParametricViewer {
 
 static const int SurfaceCount = 6;
 static const int ButtonCount = SurfaceCount - 1;
@@ -55,7 +54,7 @@ IApplicationEngine* CreateApplicationEngine(IRenderingEngine* renderingEngine,IR
 ApplicationEngine::ApplicationEngine(IRenderingEngine* renderingEngine,IResourceManager* resourceManager) :
     m_spinning(false),
     m_pressedButton(-1),
-    m_renderingEngine(renderingEngine)
+    m_renderingEngine(renderingEngine),
     m_resourceManager(resourceManager)
 {
     m_animation.Active = false;
@@ -82,8 +81,11 @@ void ApplicationEngine::Initialize(int width, int height)
 
     vector<ISurface*> surfaces(SurfaceCount);
     string path = m_resourceManager->GetResourcePath();
-    surfaces[0] = new ObjSurface(path + "/micronapalmv2.obj");
-    surfaces[1] = new ObjSurface(path + "/Ninja.obj");
+//    surfaces[0] = new ObjSurface(path + "/micronapalmv2.obj");
+//    surfaces[1] = new ObjSurface(path + "/Ninja.obj");
+    surfaces[0] = new Cone(3,1);
+    surfaces[1] = new Sphere(1.4f);
+
     surfaces[2] = new Torus(1.4f, 0.3f);
     surfaces[3] = new TrefoilKnot(1.8f);
     surfaces[4] = new KleinBottle(0.2f);
@@ -220,7 +222,5 @@ int ApplicationEngine::MapToButton(ivec2 touchpoint) const
         return -1;
     
     return buttonIndex;
-}
-
 }
 

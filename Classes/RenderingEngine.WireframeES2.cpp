@@ -4,7 +4,7 @@
 #include "Matrix.hpp"
 #include <iostream>
 
-namespace WireframeES2 {
+namespace ES2 {
     
 #define STRINGIFY(A)  #A
 #include "../Shaders/SimpleLighting.vert"
@@ -51,7 +51,7 @@ namespace WireframeES2 {
         AttributeHandles m_attributes;
     };
     
-    IRenderingEngine* CreateRenderingEngine()
+    IRenderingEngine* CreateRenderingEngine(IResourceManager* resourceManager)
     {
         return new RenderingEngine();
     }

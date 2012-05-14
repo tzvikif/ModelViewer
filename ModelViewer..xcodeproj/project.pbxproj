@@ -10,6 +10,7 @@
 		1D3623260D0F684500981E51 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AppDelegate.mm */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		203D6015156134F100B329EC /* Grid16.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D6014156134F100B329EC /* Grid16.png */; };
 		20D3CFEA1557E55700049EC3 /* SimpleLighting.vert in Sources */ = {isa = PBXBuildFile; fileRef = 20D3CFE91557E55700049EC3 /* SimpleLighting.vert */; };
 		20D3D02F155ABF2200049EC3 /* micronapalmv2.obj in Resources */ = {isa = PBXBuildFile; fileRef = 20D3D02D155ABF2200049EC3 /* micronapalmv2.obj */; };
 		20D3D030155ABF2200049EC3 /* Ninja.obj in Resources */ = {isa = PBXBuildFile; fileRef = 20D3D02E155ABF2200049EC3 /* Ninja.obj */; };
@@ -33,6 +34,7 @@
 		1D3623250D0F684500981E51 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* ModelViewer..app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ModelViewer..app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		203D6014156134F100B329EC /* Grid16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Grid16.png; sourceTree = "<group>"; };
 		20D3CFE91557E55700049EC3 /* SimpleLighting.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SimpleLighting.vert; path = Shaders/SimpleLighting.vert; sourceTree = "<group>"; };
 		20D3D02D155ABF2200049EC3 /* micronapalmv2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = micronapalmv2.obj; sourceTree = "<group>"; };
 		20D3D02E155ABF2200049EC3 /* Ninja.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Ninja.obj; sourceTree = "<group>"; };
@@ -106,6 +108,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		209968BA155BFA8F00C6E3CD /* Textures */ = {
+			isa = PBXGroup;
+			children = (
+				203D6014156134F100B329EC /* Grid16.png */,
+			);
+			name = Textures;
+			sourceTree = "<group>";
+		};
 		20D3D02B155ABEFB00049EC3 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -118,6 +128,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				209968BA155BFA8F00C6E3CD /* Textures */,
 				20D3D02B155ABEFB00049EC3 /* Models */,
 				4A3205CA1002E63100DC8880 /* Shaders */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -219,6 +230,7 @@
 				4DF856A4107A3845000ECD99 /* Default.png in Resources */,
 				20D3D02F155ABF2200049EC3 /* micronapalmv2.obj in Resources */,
 				20D3D030155ABF2200049EC3 /* Ninja.obj in Resources */,
+				203D6015156134F100B329EC /* Grid16.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
