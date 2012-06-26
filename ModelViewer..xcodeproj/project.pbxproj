@@ -11,6 +11,7 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		203D6015156134F100B329EC /* Grid16.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D6014156134F100B329EC /* Grid16.png */; };
+		208503D3159A030E00178490 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D27E4830F9AD71900447247 /* OpenGLES.framework */; };
 		20D3CFEA1557E55700049EC3 /* SimpleLighting.vert in Sources */ = {isa = PBXBuildFile; fileRef = 20D3CFE91557E55700049EC3 /* SimpleLighting.vert */; };
 		20D3D02F155ABF2200049EC3 /* micronapalmv2.obj in Resources */ = {isa = PBXBuildFile; fileRef = 20D3D02D155ABF2200049EC3 /* micronapalmv2.obj */; };
 		20D3D030155ABF2200049EC3 /* Ninja.obj in Resources */ = {isa = PBXBuildFile; fileRef = 20D3D02E155ABF2200049EC3 /* Ninja.obj */; };
@@ -20,7 +21,6 @@
 		4A4C34E91038C28B002B58DB /* RenderingEngine.WireframeES1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A4C34E21038C28B002B58DB /* RenderingEngine.WireframeES1.cpp */; };
 		4A4C34EA1038C28B002B58DB /* RenderingEngine.WireframeES2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A4C34E31038C28B002B58DB /* RenderingEngine.WireframeES2.cpp */; };
 		4A75BB7710063249001B5F63 /* ParametricSurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A75BB7610063249001B5F63 /* ParametricSurface.cpp */; };
-		4D27E4840F9AD71900447247 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D27E4830F9AD71900447247 /* OpenGLES.framework */; };
 		4D27E4B50F9AD7D600447247 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D27E4B40F9AD7D600447247 /* QuartzCore.framework */; };
 		4D3135ED0F9A6649001FFC34 /* GLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4D3135EC0F9A6649001FFC34 /* GLView.mm */; };
 		4D8FB2C30F9EB4740055EDDB /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D8FB2C20F9EB4740055EDDB /* Icon.png */; };
@@ -67,10 +67,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				208503D3159A030E00178490 /* OpenGLES.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
-				4D27E4840F9AD71900447247 /* OpenGLES.framework in Frameworks */,
 				4D27E4B50F9AD7D600447247 /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

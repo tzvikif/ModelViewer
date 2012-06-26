@@ -1,6 +1,6 @@
 #import "GLView.h"
 
-#define GL_RENDERBUFFER 0x8d41
+//#define GL_RENDERBUFFER 0x8d41
 
 @implementation GLView
 
@@ -16,13 +16,8 @@
         CAEAGLLayer* eaglLayer = (CAEAGLLayer*) self.layer;
         eaglLayer.opaque = YES;
 
-        EAGLRenderingAPI api = kEAGLRenderingAPIOpenGLES1;
+        EAGLRenderingAPI api = kEAGLRenderingAPIOpenGLES2;
         m_context = [[EAGLContext alloc] initWithAPI:api];
-        
-        if (!m_context) {
-            api = kEAGLRenderingAPIOpenGLES1;
-            m_context = [[EAGLContext alloc] initWithAPI:api];
-        }
         
         if (!m_context || ![EAGLContext setCurrentContext:m_context]) {
             [self release];

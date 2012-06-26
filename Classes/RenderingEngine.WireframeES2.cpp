@@ -18,23 +18,26 @@ namespace ES2 {
         GLint AmbientMaterial;
         GLint SpecularMaterial;
         GLint Shininess;
-        GLuint LineMode;
+        GLint Sampler;
     };
-    
+
     struct AttributeHandles {
         GLint Position;
         GLint Normal;
-        GLint DiffuseMaterial;
+        GLint Ambient;
+        GLint Diffuse;
+        GLint Specular;
+        GLint Shininess;
+        GLint TextureCoord;
     };
     
     struct Drawable {
         GLuint VertexBuffer;
         GLuint IndexBuffer;
-        GLuint lineIndexBuffer;
+        //GLuint lineIndexBuffer;
         int IndexCount;
-        int lineIndexCount;
-    };
-    
+        //int lineIndexCount;
+    }; 
     class RenderingEngine : public IRenderingEngine {
     public:
         RenderingEngine();
@@ -43,12 +46,14 @@ namespace ES2 {
     private:
         GLuint BuildShader(const char* source, GLenum shaderType) const;
         GLuint BuildProgram(const char* vShader, const char* fShader) const;
-        vector<Drawable> m_drawables;
+        vector<ES2::Drawable> m_drawables;
         GLuint m_colorRenderbuffer;
         GLuint m_depthRenderbuffer;
+        GLuint m_gridTexture;
         mat4 m_translation;
         UniformHandles m_uniforms;
         AttributeHandles m_attributes;
+        IResourceManager* m_resourceManager;
     };
     
     IRenderingEngine* CreateRenderingEngine(IResourceManager* resourceManager)
@@ -69,7 +74,7 @@ namespace ES2 {
             
             // Create the VBO for the vertices.
             vector<float> vertices;
-            (*surface)->GenerateVertices(vertices, VertexFlagsNormals);
+            (*surface)->GenerateVertices(vertices, VertexFlagsNormals|VertexFlagsTexCoords);
             GLuint vertexBuffer;
             glGenBuffers(1, &vertexBuffer);
             glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -104,8 +109,7 @@ namespace ES2 {
                          &lineIndices[0],
                          GL_STATIC_DRAW);
             
-            
-            Drawable drawable = { vertexBuffer, indexBuffer,lineIndexBuffer , indexCount, lineIndexCount};
+            Drawable drawable = { vertexBuffer, indexBuffer , indexCount};
             m_drawables.push_back(drawable);
         }
         
@@ -138,7 +142,8 @@ namespace ES2 {
         // Extract the handles to attributes and uniforms.
         m_attributes.Position = glGetAttribLocation(program, "Position");
         m_attributes.Normal = glGetAttribLocation(program, "Normal");
-        m_attributes.DiffuseMaterial = glGetAttribLocation(program, "DiffuseMaterial");
+        m_attributes.Diffuse = glGetAttribLocation(program, "DiffuseMaterial");
+        m_attributes.TextureCoord = glGetAttribLocation(program, "TextureCoord");
         m_uniforms.Projection = glGetUniformLocation(program, "Projection");
         m_uniforms.Modelview = glGetUniformLocation(program, "Modelview");
         m_uniforms.NormalMatrix = glGetUniformLocation(program, "NormalMatrix");
@@ -146,17 +151,31 @@ namespace ES2 {
         m_uniforms.AmbientMaterial = glGetUniformLocation(program, "AmbientMaterial");
         m_uniforms.SpecularMaterial = glGetUniformLocation(program, "SpecularMaterial");
         m_uniforms.Shininess = glGetUniformLocation(program, "Shininess"); 
-        m_uniforms.LineMode = glGetUniformLocation(program, "lineMode");
         
         // Set up some default material parameters.
         glUniform3f(m_uniforms.AmbientMaterial, 0.04f, 0.04f, 0.04f);
         glUniform3f(m_uniforms.SpecularMaterial, 0.5, 0.5, 0.5);
         glUniform1f(m_uniforms.Shininess, 50);
-      
-
+        // Set the active sampler to stage 0.  Not really necessary since the uniform
+        // defaults to zero anyway, but good practice.
+        glActiveTexture(GL_TEXTURE0);
+        glUniform1i(m_uniforms.Sampler, 0);
+        // Load the texture.
+        glGenTextures(1,&m_gridTexture);
+        glBindTexture(GL_TEXTURE_2D, m_gridTexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        m_resourceManager = CreateResourceManager();
+        m_resourceManager->LoadPngImage("Grid16.png");
+        void* pixels = m_resourceManager->GetImageData();
+        ivec2 size = m_resourceManager->GetImageSize();
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, 
+                     size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+        m_resourceManager->UnloadImage();
         // Initialize various state.
         glEnableVertexAttribArray(m_attributes.Position);
         glEnableVertexAttribArray(m_attributes.Normal);
+        glEnableVertexAttribArray(m_attributes.TextureCoord);
         glEnable(GL_DEPTH_TEST);
         
         // Set up transforms.
@@ -197,26 +216,22 @@ namespace ES2 {
             
             // Set the diffuse color.
             vec3 color = visual->Color * 0.75f;
-            glVertexAttrib4f(m_attributes.DiffuseMaterial, color.x, color.y, color.z, 1);
+            glVertexAttrib4f(m_attributes.Diffuse, color.x, color.y, color.z, 1);
             
             // Draw the surface.
-            int stride = 2 * sizeof(vec3);
-            const GLvoid* offset = (const GLvoid*) sizeof(vec3);
+            int stride = sizeof(vec3) + sizeof(vec3) + sizeof(vec2);
+            const GLvoid* normalOffset = (const GLvoid*) sizeof(vec3);
+            const GLvoid* texCoordOffset = (const GLvoid*) (2 * sizeof(vec3));
             GLint position = m_attributes.Position;
             GLint normal = m_attributes.Normal;
+            GLint texCoord = m_attributes.TextureCoord;
             const Drawable& drawable = m_drawables[visualIndex];
-            glUniform1f(m_uniforms.LineMode, 0);
             glBindBuffer(GL_ARRAY_BUFFER, drawable.VertexBuffer);
-            glPolygonOffset(1, 0);
-            glEnable(GL_POLYGON_OFFSET_FILL);
             glVertexAttribPointer(position, 3, GL_FLOAT, GL_FALSE, stride, 0);
-            glVertexAttribPointer(normal, 3, GL_FLOAT, GL_FALSE, stride, offset);
+            glVertexAttribPointer(normal, 3, GL_FLOAT, GL_FALSE, stride, normalOffset);
+            glVertexAttribPointer(texCoord, 2, GL_FLOAT, GL_FALSE, stride, texCoordOffset);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable.IndexBuffer);
             glDrawElements(GL_TRIANGLES, drawable.IndexCount, GL_UNSIGNED_SHORT, 0);
-            glDisable(GL_POLYGON_OFFSET_FILL);
-            glUniform1f(m_uniforms.LineMode, 1);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable.lineIndexBuffer);
-            glDrawElements(GL_LINES, drawable.lineIndexCount, GL_UNSIGNED_SHORT, 0);
         }
     }
     
@@ -261,5 +276,5 @@ namespace ES2 {
         
         return programHandle;
     }
-    
 }
+
